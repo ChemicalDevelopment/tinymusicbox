@@ -3,6 +3,8 @@
 
 #include "tinymusicbox.h"
 
+#include "pa_player.h"
+
 #include <getopt.h>
 
 
@@ -27,6 +29,13 @@ int main(int argc, char ** argv) {
                 return 1;
         }
     }
+
+
+    tmb_pa_init();
+
+    while (1);
+
+    tmb_pa_stop();
 
 
     return 0;

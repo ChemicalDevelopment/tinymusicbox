@@ -2,6 +2,10 @@
 // note manager
 
 #include "noteman.h"
+#include "tinymusicbox.h"
+#include "pa_player.h"
+#include "waves.h"
+
 
 
 // which notes are being played
@@ -49,7 +53,7 @@ float eval_note(note_t note, float t) {
         float note_hz = hz_from_semitone(note.semitone);
         float wave_val;
 
-        switch (cur_notes[j].wave_function) {
+        switch (note.wave_function) {
             case WAVE_SAW:
                 wave_val = wave_saw(time_offset, note_hz, note.tweak);
                 break;
@@ -75,7 +79,7 @@ void cleanup_notes() {
     int i;
     for (i = 0; i < MAX_NUM_NOTES; ++i) {
         if (notes_enabled[i]) {
-            if ((float)total_frames_processed / SAMPLE_RATE > cur_notes[i].time_offset + cur_notes[i].duration) {
+            if ((float)total_frames / SAMPLE_RATE > cur_notes[i].time_offset + cur_notes[i].duration) {
                 remove_note(i);
             }
         }

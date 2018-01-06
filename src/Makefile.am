@@ -6,5 +6,5 @@ AM_LDFLAGS =
 
 bin_PROGRAMS = tinymusicbox
 
-tinymusicbox_SOURCES = tinymusicbox.h waves.h noteman.h tinymusicbox.c waves.c noteman.c
+tinymusicbox_SOURCES = tinymusicbox.h waves.h noteman.h pa_player.h tinymusicbox.c waves.c noteman.c pa_player.c
 tinymusicbox_LDADD = -lportaudio

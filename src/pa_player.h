@@ -12,19 +12,23 @@ typedef struct {
     // data structure that is passed (size 0 because we don't need it)
 } paTestData;
 
-
+unsigned long long total_frames;
 
 PaStream * pa_stream;
 PaStreamParameters pa_parameters;
 PaError pa_error;
 
-
 void tmb_pa_init();
+
+void tmb_pa_stop();
 
 void tmb_pa_errorhandle();
 
+void tmb_pa_streamfinished(void *userData);
+
+
 // callback audio function for generating sample data
-static int tmb_pa_callback(
+int tmb_pa_callback(
     const void *inputBuffer, void *outputBuffer,
     unsigned long framesPerBuffer,
     const PaStreamCallbackTimeInfo* timeInfo,

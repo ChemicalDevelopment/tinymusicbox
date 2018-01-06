@@ -4,6 +4,8 @@
 #ifndef NOTEMAN_H
 #define NOTEMAN_H
 
+#include "stdbool.h"
+
 // how many notes maximum being queued at one time
 #define MAX_NUM_NOTES (256)
 
