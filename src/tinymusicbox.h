@@ -18,7 +18,7 @@
 
 
 #define SAMPLE_RATE   (44100)
-#define FRAMES_PER_BUFFER  (128)
+#define FRAMES_PER_BUFFER  (256)
 #define CHANNELS (2)
 
 int main(int argc, char ** argv);

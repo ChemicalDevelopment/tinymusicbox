@@ -29,6 +29,9 @@ typedef struct note_t {
     // tweak parameter that can change the waveform
     float tweak;
 
+    // wet mixer, 0.0 is dry, 1.0 is completely wet
+    float wet;
+
     // which wavefunction (see WAVE_* macros)
     int wave_function;
 
@@ -48,6 +51,10 @@ note_t default_note;
 
 // note manipulation functions
 
+
+// creates a note
+note_t create_note(float offset, float dur, float vol, float tweak, float wetmix, int wave_function, int semitone);
+
 // adds a note to active notes
 void add_note(note_t note);
 
@@ -61,7 +68,7 @@ float hz_from_semitone(int semitone);
 float eval_note(note_t note, float t);
 
 // cleans up expired notes
-void cleanup_notes();
+void cleanup_notes(float t);
 
 
 #endif

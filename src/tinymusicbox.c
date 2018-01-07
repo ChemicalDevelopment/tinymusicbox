@@ -4,6 +4,7 @@
 #include "tinymusicbox.h"
 
 #include "pa_player.h"
+#include "noteman.h"
 
 #include <getopt.h>
 
@@ -32,6 +33,14 @@ int main(int argc, char ** argv) {
 
 
     tmb_pa_init();
+
+    note_t cnote = default_note;
+    cnote.time_offset = 0.0f;
+    cnote.duration = 1.5f;
+    cnote.wet = 1.0f;
+    cnote.wave_function = WAVE_SAW;
+
+    add_note(cnote);
 
     while (1);
 

@@ -26,7 +26,6 @@ void tmb_pa_errorhandle();
 
 void tmb_pa_streamfinished(void *userData);
 
-
 // callback audio function for generating sample data
 int tmb_pa_callback(
     const void *inputBuffer, void *outputBuffer,

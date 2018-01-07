@@ -6,6 +6,7 @@
 #include "pa_player.h"
 #include "noteman.h"
 #include "tinymusicbox.h"
+#include "gvst.h"
 
 unsigned long long total_frames;
 
@@ -14,7 +15,15 @@ PaStreamParameters pa_parameters;
 PaError pa_error;
 
 
+float * cur_instrument;
+
+float * dry_signal, * wet_signal;
+
+
 void tmb_pa_init() {
+
+    PA_HANDLE(Pa_Initialize());
+
     pa_parameters.device = Pa_GetDefaultOutputDevice(); /* default output device */
 
     total_frames = 0;
@@ -31,6 +40,7 @@ void tmb_pa_init() {
     pa_parameters.suggestedLatency = Pa_GetDeviceInfo(pa_parameters.device)->defaultLowOutputLatency;
     pa_parameters.hostApiSpecificStreamInfo = NULL; 
 
+
     PA_HANDLE(Pa_OpenStream(
         &pa_stream,
         NULL, /* no input */
@@ -38,11 +48,15 @@ void tmb_pa_init() {
         SAMPLE_RATE,
         FRAMES_PER_BUFFER,
         paClipOff,      /* we won't output out of range samples so don't bother clipping them */
-        patestCallback,
+        tmb_pa_callback,
         &data
     ));
 
-    PA_HANDLE(Pa_SetStreamFinishedCallback(pa_stream, &tmp_pa_streamfinished));
+    dry_signal = malloc(sizeof(float) * FRAMES_PER_BUFFER);
+    wet_signal = malloc(sizeof(float) * FRAMES_PER_BUFFER);
+    cur_instrument = malloc(sizeof(float) * FRAMES_PER_BUFFER);
+
+    PA_HANDLE(Pa_SetStreamFinishedCallback(pa_stream, &tmb_pa_streamfinished));
 
     PA_HANDLE(Pa_StartStream(pa_stream));
 
@@ -52,6 +66,10 @@ void tmb_pa_stop() {
     PA_HANDLE(Pa_StopStream(pa_stream));
     PA_HANDLE(Pa_CloseStream(pa_stream));
     Pa_Terminate();
+
+    free(dry_signal);
+    free(wet_signal);
+    free(cur_instrument);
 }
 
 void tmb_pa_errorhandle() {
@@ -66,6 +84,7 @@ void tmb_pa_streamfinished(void *userData) {
     printf("stream finished\n");
 }
 
+
 // callback audio function for generating sample data
 int tmb_pa_callback(
     const void *inputBuffer, void *outputBuffer,
@@ -78,37 +97,61 @@ int tmb_pa_callback(
     float *out = (float*)outputBuffer;
 
     // loop vars
-    int i, j;
+    int i, j, k;
 
     // global (since sample 0), and local (since this callback function)
-    float global_time, local_time, note_time;
+    float global_time, note_time;
+
+    float val;
+
+    float wet_param;
+
 
     // current note
     note_t cnote;
 
-    float note_val, total_val;
+    cleanup_notes((float)total_frames / SAMPLE_RATE);
+
 
     for (i = 0; i < framesPerBuffer; ++i) {
-        global_time = (float)total_frames / SAMPLE_RATE;
-        local_time = (float)i / SAMPLE_RATE;
-
-        total_val = 0.0f;
-        
-        for (j = 0; j < MAX_NUM_NOTES; ++j) {
-            cnote = cur_notes[j];
-            if (notes_enabled[j] && global_time >= cnote.time_offset && global_time <= cnote.time_offset + cnote.duration) {
-                note_time = global_time - cnote.time_offset;
-                note_val = eval_note(cnote, note_time);
-                total_val += note_val;
-            }
+        for (k = 0; k < CHANNELS; ++k) {
+            out[CHANNELS * i + k] = 0.0f;
         }
-
-        *out++ = total_val;
-        *out++ = total_val;
-        total_frames++;
-
     }
 
+    for (j = 0; j < MAX_NUM_NOTES; ++j) {
+        cnote = cur_notes[j];
+        
+        if (notes_enabled[j]) {
+            memset(cur_instrument, 0x00, CHANNELS * FRAMES_PER_BUFFER * sizeof(float));
+
+            for (i = 0; i < framesPerBuffer; ++i) {
+                global_time = (float)(total_frames + i) / SAMPLE_RATE;
+                note_time = global_time - cnote.time_offset;
+                cur_instrument[i] = eval_note(cnote, note_time);
+            }
+
+            memcpy(dry_signal, cur_instrument, sizeof(float) * FRAMES_PER_BUFFER);
+            memcpy(wet_signal, dry_signal, sizeof(float) * FRAMES_PER_BUFFER);
+
+            // do gvst processing here
+
+            //gvst_copy(wet_signal, dry_signal);
+
+            wet_param = cnote.wet;
+            if (wet_param < 0.0f) wet_param = 0.0f;
+            if (wet_param > 1.0f) wet_param = 1.0f;
+
+            for (i = 0; i < framesPerBuffer; ++i) {
+                val = wet_param * wet_signal[i] + (1.0f - wet_param) * dry_signal[i];
+                for (k = 0; k < CHANNELS; ++k) {
+                    out[CHANNELS * i + k] = val;
+                }
+            }
+        }
+    }
+
+    total_frames += framesPerBuffer;
 
     return paContinue;
 }
