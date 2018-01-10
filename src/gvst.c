@@ -4,6 +4,7 @@
 #include "tinymusicbox.h"
 #include "gvst.h"
 #include "pa_player.h"
+#include "waves.h"
 
 // example function that does nothing
 

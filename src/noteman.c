@@ -5,6 +5,7 @@
 #include "tinymusicbox.h"
 #include "pa_player.h"
 #include "waves.h"
+#include "envelope.h"
 
 
 
@@ -88,8 +89,7 @@ float eval_note(note_t note, float t) {
                 break;
         }
         float env_fact = envelope_factor(note, t);
-        printf("%f, ", env_fact);
-        return note.volume * wave_val;
+        return note.volume * env_fact * wave_val;
     } else {
         return 0.0f;
     }
