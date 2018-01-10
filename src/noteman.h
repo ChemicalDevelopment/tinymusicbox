@@ -13,6 +13,7 @@
 #define WAVE_SQR 0x12
 #define WAVE_TRI 0x13
 #define WAVE_SAW 0x14
+#define WAVE_NOISE 0x15
 
 
 typedef struct note_t {
@@ -38,6 +39,9 @@ typedef struct note_t {
     // semitones from A0 (A4,440hz is semitone=48, A3,220hz is semitone=36). 12 for each octaves
     int semitone;
 
+    // envelope settings
+    float A, D, S, R;
+
 } note_t;
 
 
@@ -53,7 +57,7 @@ note_t default_note;
 
 
 // creates a note
-note_t create_note(float offset, float dur, float vol, float tweak, float wetmix, int wave_function, int semitone);
+note_t create_note(float offset, float dur, float vol, float tweak, float wetmix, int wave_function, int semitone, float A, float D, float S, float R);
 
 // adds a note to active notes
 void add_note(note_t note);

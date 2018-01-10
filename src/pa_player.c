@@ -15,6 +15,12 @@ PaStreamParameters pa_parameters;
 PaError pa_error;
 
 
+
+float * last_frame;
+
+
+// tmp variables
+
 float * cur_instrument;
 
 float * dry_signal, * wet_signal;
@@ -52,6 +58,7 @@ void tmb_pa_init() {
         &data
     ));
 
+    last_frame = malloc(sizeof(float) * FRAMES_PER_BUFFER);
     dry_signal = malloc(sizeof(float) * FRAMES_PER_BUFFER);
     wet_signal = malloc(sizeof(float) * FRAMES_PER_BUFFER);
     cur_instrument = malloc(sizeof(float) * FRAMES_PER_BUFFER);
@@ -137,6 +144,7 @@ int tmb_pa_callback(
             // do gvst processing here
 
             //gvst_copy(wet_signal, dry_signal);
+           // gvst_lowpass(wet_signal, dry_signal, 20000);
 
             wet_param = cnote.wet;
             if (wet_param < 0.0f) wet_param = 0.0f;
@@ -149,6 +157,10 @@ int tmb_pa_callback(
                 }
             }
         }
+    }
+
+    for (i = 0; i < framesPerBuffer; ++i) {
+        last_frame[i] = out[i];
     }
 
     total_frames += framesPerBuffer;

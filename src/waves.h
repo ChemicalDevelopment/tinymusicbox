@@ -19,5 +19,7 @@ WAVE_SIGNATURE(wave_sqr);
 
 WAVE_SIGNATURE(wave_tri);
 
+WAVE_SIGNATURE(wave_noise);
+
 
 #endif

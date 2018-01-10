@@ -14,6 +14,8 @@ typedef struct {
 
 unsigned long long total_frames;
 
+float * last_frame;
+
 PaStream * pa_stream;
 PaStreamParameters pa_parameters;
 PaError pa_error;
