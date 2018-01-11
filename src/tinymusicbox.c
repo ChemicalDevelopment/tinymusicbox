@@ -36,7 +36,7 @@ int main(int argc, char ** argv) {
 
     note_t cnote = default_note;
     cnote.time_offset = 0.0f;
-    cnote.duration = 1.2f;
+    cnote.duration = 4.0f;
     cnote.wet = 1.0f;
     cnote.wave_function = WAVE_SAW;
 

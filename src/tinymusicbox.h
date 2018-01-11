@@ -17,11 +17,12 @@
 #include <math.h>
 
 
-#define SAMPLE_RATE   (44100)
-#define FRAMES_PER_BUFFER  (256)
+#define SAMPLE_RATE (44100)
+#define FRAMES_PER_BUFFER (256 * 16)
+
 #define CHANNELS (2)
 
-int main(int argc, char ** argv);
 
+int main(int argc, char ** argv);
 
 #endif

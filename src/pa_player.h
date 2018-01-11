@@ -16,6 +16,9 @@ unsigned long long total_frames;
 
 float * last_frame;
 
+float * last_dry_signal;
+float ** last_dry_signal_arr;
+
 PaStream * pa_stream;
 PaStreamParameters pa_parameters;
 PaError pa_error;

@@ -56,4 +56,16 @@ void gvst_clipper(float * wet, float * dry, float clipmark) {
 }
 
 
+void gvst_flanger(float * wet, float * dry, float ms, float hz) {
+    int i, j;
+    float tmp;
+    for (i = 0; i < FRAMES_PER_BUFFER; ++i) {
+        tmp = (1.0f + sinf(hz * 2 * M_PI * (float)(total_frames + i) / SAMPLE_RATE)) / 2.0f;
+        j = i - (int)floor(ms * SAMPLE_RATE * tmp / 1000.0f + 0.5f);
+        if (j >= 0 && j < FRAMES_PER_BUFFER) wet[i] = dry[i] + dry[j];
+        else if (j + FRAMES_PER_BUFFER >= 0 && j + FRAMES_PER_BUFFER < FRAMES_PER_BUFFER) wet[i] = dry[i] + last_dry_signal[j + FRAMES_PER_BUFFER];
+        else wet[i] = 2.0f * dry[i];
+    }
+}
+
 

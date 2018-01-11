@@ -16,12 +16,16 @@ PaError pa_error;
 
 
 
+float * last_dry_signal;
+float ** last_dry_signal_arr;
+
 float * last_frame;
 
 
 // tmp variables
 
 float * cur_instrument;
+
 
 float * dry_signal, * wet_signal;
 
@@ -62,6 +66,16 @@ void tmb_pa_init() {
     dry_signal = malloc(sizeof(float) * FRAMES_PER_BUFFER);
     wet_signal = malloc(sizeof(float) * FRAMES_PER_BUFFER);
     cur_instrument = malloc(sizeof(float) * FRAMES_PER_BUFFER);
+    
+
+    last_dry_signal = malloc(sizeof(float) * FRAMES_PER_BUFFER);
+    last_dry_signal_arr = malloc(sizeof(float *) * MAX_NUM_NOTES);
+
+    int i;
+    for (i = 0; i < MAX_NUM_NOTES; ++i) {
+        last_dry_signal_arr[i] = malloc(sizeof(float) * FRAMES_PER_BUFFER);
+    }
+    
 
     PA_HANDLE(Pa_SetStreamFinishedCallback(pa_stream, &tmb_pa_streamfinished));
 
@@ -138,13 +152,19 @@ int tmb_pa_callback(
                 cur_instrument[i] = eval_note(cnote, note_time);
             }
 
+            memcpy(last_dry_signal, last_dry_signal_arr[j], sizeof(float) * FRAMES_PER_BUFFER);
+
             memcpy(dry_signal, cur_instrument, sizeof(float) * FRAMES_PER_BUFFER);
             memcpy(wet_signal, dry_signal, sizeof(float) * FRAMES_PER_BUFFER);
+
+            memcpy(last_dry_signal_arr[j], dry_signal, sizeof(float) * FRAMES_PER_BUFFER);
 
             // do gvst processing here
 
             //gvst_copy(wet_signal, dry_signal);
-           // gvst_lowpass(wet_signal, dry_signal, 20000);
+            //gvst_lowpass(wet_signal, dry_signal, 20000);
+            //gvst_clipper(wet_signal, dry_signal, .9f);
+            //gvst_flanger(wet_signal, dry_signal, 20, 2.0f);
 
             wet_param = cnote.wet;
             if (wet_param < 0.0f) wet_param = 0.0f;

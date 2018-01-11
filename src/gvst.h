@@ -11,5 +11,7 @@ void gvst_clipper(float * wet, float * dry, float clipmark);
 
 void gvst_lowpass(float * wet, float * dry, float cutoff);
 
+void gvst_flanger(float * wet, float * dry, float ms, float hz);
+
 #endif
 
