@@ -7,7 +7,7 @@
 #include "stdbool.h"
 
 // how many notes maximum being queued at one time
-#define MAX_NUM_NOTES (256)
+#define MAX_NUM_NOTES (256*4)
 
 #define WAVE_SIN 0x11
 #define WAVE_SQR 0x12
@@ -45,12 +45,18 @@ typedef struct note_t {
 } note_t;
 
 
+
+int num_notes_enabled;
 // which notes are being played
 note_t cur_notes[MAX_NUM_NOTES];
 bool notes_enabled[MAX_NUM_NOTES];
 
 // the default value
 note_t default_note;
+
+note_t snare_note;
+
+note_t hat_note;
 
 
 // note manipulation functions

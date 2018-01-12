@@ -133,6 +133,10 @@ int tmb_pa_callback(
 
     cleanup_notes((float)total_frames / SAMPLE_RATE);
 
+    // update if any new ones are generated
+    update_notes();
+
+
 
     for (i = 0; i < framesPerBuffer; ++i) {
         for (k = 0; k < CHANNELS; ++k) {
@@ -152,6 +156,8 @@ int tmb_pa_callback(
                 cur_instrument[i] = eval_note(cnote, note_time);
             }
 
+            //printf("%f ", cur_instrument[0]);
+
             memcpy(last_dry_signal, last_dry_signal_arr[j], sizeof(float) * FRAMES_PER_BUFFER);
 
             memcpy(dry_signal, cur_instrument, sizeof(float) * FRAMES_PER_BUFFER);
@@ -164,7 +170,7 @@ int tmb_pa_callback(
             //gvst_copy(wet_signal, dry_signal);
             //gvst_lowpass(wet_signal, dry_signal, 20000);
             //gvst_clipper(wet_signal, dry_signal, .9f);
-            //gvst_flanger(wet_signal, dry_signal, 20, 2.0f);
+            //gvst_flanger(wet_signal, dry_signal, 20, .4f);
 
             wet_param = cnote.wet;
             if (wet_param < 0.0f) wet_param = 0.0f;
@@ -172,8 +178,9 @@ int tmb_pa_callback(
 
             for (i = 0; i < framesPerBuffer; ++i) {
                 val = wet_param * wet_signal[i] + (1.0f - wet_param) * dry_signal[i];
+                
                 for (k = 0; k < CHANNELS; ++k) {
-                    out[CHANNELS * i + k] = val;
+                    out[CHANNELS * i + k] += val;
                 }
             }
         }

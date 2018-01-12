@@ -5,6 +5,8 @@
 
 #include "pa_player.h"
 #include "noteman.h"
+#include "genmusic.h"
+
 
 #include <getopt.h>
 
@@ -32,17 +34,19 @@ int main(int argc, char ** argv) {
     }
 
 
+    update_notes();
+
     tmb_pa_init();
+    
 
-    note_t cnote = default_note;
-    cnote.time_offset = 0.0f;
-    cnote.duration = 4.0f;
-    cnote.wet = 1.0f;
-    cnote.wave_function = WAVE_SAW;
-
-    cnote.R = .5f;
+    /*
+    note_t cnote = snare_note;
 
     add_note(cnote);
+    cnote.time_offset = 2.0f;
+    add_note(cnote);
+
+    */
 
     while (1);
 

@@ -9,12 +9,16 @@
 
 
 
+int num_notes_enabled = 0;
+
 // which notes are being played
 note_t cur_notes[MAX_NUM_NOTES];
 bool notes_enabled[MAX_NUM_NOTES];
 
 // the default value (offset, duration, volume, tweak, wet, wave_function, semitone, A, D, S, R)
 note_t default_note = { 0.0f, 4.0f, 1.0f, 0.0f, 0.0f, WAVE_SIN, 48 , 0.0f, 0.0f, 1.0f, 0.0f };
+note_t snare_note = { 0.0f, 1.0f, 0.8f, 0.0f, 0.0f, WAVE_NOISE, 0, 0.0f, .36f, 0.0f, 0.0f };
+note_t hat_note = { 0.0f, 1.0f, 0.95f, 0.0f, 0.0f, WAVE_NOISE, 0, 0.0f, .06f, 0.00f, 0.0f };
 
 
 // note manipulation functions
@@ -43,6 +47,7 @@ void add_note(note_t note) {
         if (!notes_enabled[i]) {
             cur_notes[i] = note;
             notes_enabled[i] = true;
+            num_notes_enabled++;
             return;
         }
     }
@@ -52,6 +57,7 @@ void add_note(note_t note) {
 // sets a note to inactive
 void remove_note(int note_id) {
     if (note_id >= 0 && note_id < MAX_NUM_NOTES) {
+        num_notes_enabled--;
         notes_enabled[note_id] = false;
     }
 }
