@@ -12,7 +12,7 @@
 
 void str_from_note(char ** c, note_t note);
 
-void note_from_str(note_t note, char ** c);
+void note_from_str(note_t * note, char ** c);
 
 void update_notes();
 

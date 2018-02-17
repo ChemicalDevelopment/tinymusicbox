@@ -15,6 +15,14 @@ void gvst_copy(float * wet, float * dry) {
     }
 }
 
+
+void gvst_boost(float * wet, float * dry, float p) {
+    int i;
+    for (i = 0; i < FRAMES_PER_BUFFER; ++i) {
+        wet[i] = dry[i] * p;
+    }
+}
+
 /*
 
 lowpass filter (to make things sound less annoying)

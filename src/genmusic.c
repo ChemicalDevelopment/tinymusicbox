@@ -8,8 +8,8 @@ void str_from_note(char ** c, note_t note) {
     sprintf(*c, "%f,%f,%f,%f,%f,%d,%d,%f,%f,%f,%f", note.time_offset, note.duration, note.volume, note.tweak, note.wet, note.wave_function, note.semitone, note.A, note.D, note.S, note.R);
 }
 
-void note_from_str(note_t note, char ** c) {
-    sscanf(*c, "%f,%f,%f,%f,%f,%d,%d,%f,%f,%f,%f", &note.time_offset, &note.duration, &note.volume, &note.tweak, &note.wet, &note.wave_function, &note.semitone, &note.A, &note.D, &note.S, &note.R);
+void note_from_str(note_t * note, char ** c) {
+    sscanf(*c, "%f,%f,%f,%f,%f,%d,%d,%f,%f,%f,%f", &note->time_offset, &note->duration, &note->volume, &note->tweak, &note->wet, &note->wave_function, &note->semitone, &note->A, &note->D, &note->S, &note->R);
 }
 
 // depth is how many bits deep to modulate (1 through 32)
@@ -45,8 +45,9 @@ void randomize_measure(note_t note, int depth) {
     for (i = 0; i < depth; ++i) {
         if (ndelay & (1 << i)) {
             note.time_offset = start_off + 4.0f * (i * BEAT) / (depth);
-            nsemi = rand() % 16 - 8;
+            nsemi = (rand() % 16) - 8;
             note.semitone = start_semitone + nsemi;
+            if (nsemi == 2 || nsemi == 0 || nsemi == 4 || nsemi == -2)// || nsemi == -2 || nsemi == 5 || nsemi == -4)
             add_note(note);
         }
     }
@@ -93,8 +94,10 @@ void update_notes() {
             randomize_measure_beat(cnote, 16);
 
             cnote = default_note;
-            cnote.wave_function = WAVE_TRI;
+            //cnote.wave_function = WAVE_TRI;
+            cnote.wave_function = WAVE_SQR;
             cnote.semitone = 21;
+            cnote.wet = 1.0;
             cnote.time_offset = max_time_off + 4.0 * i * BEAT;
             randomize_measure(cnote, 8);
 

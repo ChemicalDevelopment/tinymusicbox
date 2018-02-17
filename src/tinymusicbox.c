@@ -34,6 +34,8 @@ int main(int argc, char ** argv) {
     }
 
 
+    srand(time(NULL));
+
     update_notes();
 
     tmb_pa_init();
