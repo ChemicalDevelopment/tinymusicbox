@@ -21,5 +21,9 @@ WAVE_SIGNATURE(wave_tri);
 
 WAVE_SIGNATURE(wave_noise);
 
+WAVE_SIGNATURE(wave_808);
+
+//WAVE_SIGNATURE(wave_);
+
 
 #endif

@@ -170,8 +170,8 @@ int tmb_pa_callback(
             //gvst_copy(wet_signal, dry_signal);
             //gvst_lowpass(wet_signal, dry_signal, 20000);
             gvst_clipper(wet_signal, dry_signal, .4f);
-            gvst_boost(wet_signal, dry_signal, 2.5f);
-            gvst_flanger(wet_signal, dry_signal, 20, .33f);
+            //gvst_boost(wet_signal, dry_signal, 2.5f);
+            //gvst_flanger(wet_signal, dry_signal, 10, .15f);
 
             wet_param = cnote.wet;
             if (wet_param < 0.0f) wet_param = 0.0f;

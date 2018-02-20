@@ -22,7 +22,7 @@
 
 #define CHANNELS (2)
 
-#define BPM (60.0f)
+#define BPM (120.0f)
 #define BEAT (60.0f / BPM)
 
 

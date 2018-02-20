@@ -89,6 +89,9 @@ float eval_note(note_t note, float t) {
             case WAVE_NOISE:
                 wave_val = wave_noise(t, note_hz, note.tweak);
                 break;
+            case WAVE_808:
+                wave_val = wave_808(t, note_hz, note.tweak);
+                break;
             case WAVE_SIN:
             default:
                 wave_val = wave_sin(t, note_hz, note.tweak);

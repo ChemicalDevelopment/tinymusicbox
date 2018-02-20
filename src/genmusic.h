@@ -14,6 +14,8 @@ void str_from_note(char ** c, note_t note);
 
 void note_from_str(note_t * note, char ** c);
 
+float rflt();
+
 void update_notes();
 
 #endif

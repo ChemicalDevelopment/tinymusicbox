@@ -14,6 +14,7 @@
 #define WAVE_TRI 0x13
 #define WAVE_SAW 0x14
 #define WAVE_NOISE 0x15
+#define WAVE_808 0x16
 
 
 typedef struct note_t {
